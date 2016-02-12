@@ -1,0 +1,30 @@
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+  id   BIGSERIAL,
+  name VARCHAR(128),
+  CONSTRAINT "users_id" PRIMARY KEY (id)
+);
+
+CREATE TABLE posts (
+  id   BIGSERIAL,
+  title VARCHAR(128),
+  user_id BIGINT NOT NULL,
+  CONSTRAINT "posts_id" PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
+
+CREATE TABLE comments (
+  id BIGSERIAL,
+  text VARCHAR(256) NOT NULL,
+  post_id BIGINT NOT NULL,
+  CONSTRAINT "comment_id" PRIMARY KEY (id),
+  FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE
+);
+
+
+
+
+
