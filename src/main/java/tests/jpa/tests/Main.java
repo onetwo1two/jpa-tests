@@ -17,6 +17,10 @@ public class Main {
 
         PostDao postDao = ctx.getBean(PostDao.class);
 
+
+        Post post1 = postDao.getById(1L);
+        System.out.println(post1);
+
         Post post = postDao.testEntityGraph(1L);
         System.out.println(post);
     }

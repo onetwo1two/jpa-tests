@@ -12,11 +12,10 @@ public class Post extends BaseEntity<Long> {
     private String title;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name="post_id", referencedColumnName="id")
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     private List<Comment> comments;
 
     public String getTitle() {

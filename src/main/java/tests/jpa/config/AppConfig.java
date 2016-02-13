@@ -19,21 +19,23 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 
 @Configuration
-@PropertySource({"classpath:db/persistence-postgresql.properties"})
+@PropertySource({"classpath:db/persistence-hsqldb.properties"})
 @EnableTransactionManagement
 public class AppConfig {
 
     @Autowired
     private Environment env;
 
-    @Value("classpath:db/initPostgreSQL.sql")
+    @Value("classpath:db/initHSQLDB.sql")
     private Resource schemaScript;
 
-    @Value("classpath:db/defaultValues.sql")
+    @Value("classpath:db/defaultValuesHSQL.sql")
     private Resource dataScript;
 
     @Bean
@@ -53,7 +55,13 @@ public class AppConfig {
         em.setPackagesToScan("tests.jpa.entities");
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
-        em.setJpaProperties(additionalJpaProperties());
+
+        Map<String, String> propertyMap = new HashMap<>();
+        propertyMap.put("hibernate.format_sql", env.getProperty("hibernate.format_sql"));
+        propertyMap.put("hibernate.use_sql_comments", env.getProperty("hibernate.use_sql_comments"));
+        em.setJpaPropertyMap(propertyMap);
+
+        em.setJpaProperties(additionalHibernateProperties());
         return em;
     }
 
@@ -64,11 +72,11 @@ public class AppConfig {
         return transactionManager;
     }
 
-    public final Properties additionalJpaProperties() {
+    public final Properties additionalHibernateProperties() {
         Properties properties = new Properties();
-        properties.setProperty("showSql", env.getProperty("hibernate.showSql"));
 //        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL9Dialect");
+        properties.setProperty  ("hibernate.show_sql", env.getProperty("hibernate.showSql"));
+        properties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
         return properties;
     }
 

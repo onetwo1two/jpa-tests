@@ -1,17 +1,16 @@
 package tests.jpa.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "comments")
-public class Comment extends BaseEntity<Long> {
+public class Comment extends BaseEntity<Long>  {
 
     private String text;
 
-    @Column(name="post_id")
-    private long postId;
+    @ManyToOne()
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     public String getText() {
         return text;
@@ -21,12 +20,12 @@ public class Comment extends BaseEntity<Long> {
         this.text = text;
     }
 
-    public long getPostId() {
-        return postId;
+    public Post getPost() {
+        return post;
     }
 
-    public void setPostId(long postId) {
-        this.postId = postId;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     @Override
@@ -34,7 +33,6 @@ public class Comment extends BaseEntity<Long> {
         return "Comment{" +
                 "id = " + id +
                 ", text='" + text + '\'' +
-                ", postId=" + postId +
                 '}';
     }
 }
